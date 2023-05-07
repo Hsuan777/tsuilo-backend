@@ -42,6 +42,7 @@ io.on('connection', (socket) => {
 // const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
 const cardsRouter = require('./routes/cards');
+const uploadRouter = require('./routes/upload');
 
 const app = express();
 
@@ -55,6 +56,7 @@ app.use(cors());
 // app.use('/', indexRouter);
 app.use('/', usersRouter);
 app.use('/cards', cardsRouter);
+app.use('/upload', uploadRouter);
 app.use(HttpControllers.notFound);
 
 // express 自訂錯誤處理

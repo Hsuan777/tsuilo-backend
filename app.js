@@ -3,8 +3,8 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const cors = require('cors');
-// const passport = require('passport');
-// const GoogleStrategy = require('passport-google-oauth20').Strategy;
+const passport = require('passport');
+const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const HttpControllers = require('./controllers/http');
 const resError = require('./service/resError');
 
@@ -20,6 +20,17 @@ process.on('uncaughtException', error => {
 
 // 連線 mongodb
 require('./connections');
+
+passport.use(new GoogleStrategy(
+  {
+    clientID: process.env.GOOGLE_CLIENT_ID,
+    clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+    callbackURL: "http://localhost:3000/auth/google/callback"
+  },
+  (accessToken, refreshToken, profile, cb) => {
+    return cb(null, profile._json);
+  }
+));
 
 const io = require('socket.io')(3001);
 io.on('connection', (socket) => {

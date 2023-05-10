@@ -43,47 +43,8 @@ const user = {
       name: req.user.name,
       avatar: req.user.picture,
     };
-    this.thirdPartySignin('google', data, res);
-  },
-  async thirdPartySignin(provider, data, res) {
-    tempData = {};
-    const webSiteCallbackUrl = `${process.env.WEB_CALLBACK_HOST}/#/callback`;
-    const user = await User.findOne({ email: data.email });
-    const onceToken = uuid.v4();
-    const onceTokenHash = await bcrypt.hash(await onceToken, 12);
-    tempData.onceToken = onceToken;
-    // 信箱已存在 且 已使用第三方登入
-    if (user && user[`${provider}Id`]) {
-      tempData.user = user;
-      res.redirect(webSiteCallbackUrl + `?token=${onceTokenHash}`);
-    } else if (user && user[`${provider}Id`] === undefined) {
-      //  信箱已存在 且 未使用第三方登入
-      user[`${provider}Id`] = data[`${provider}Id`];
-      tempData.user = user;
-      res.redirect(webSiteCallbackUrl + `?onceToken=${onceTokenHash}`);
-    } else {
-      // 信箱不存在 且 使用第三方登入
-      // 檢查使用者是否已達限制數量
-      const userCount = await User.count();
-      if (userCount >= 500) return appError(40003, next, '已達到註冊上限');
-
-      // 第三方登入無須密碼，但 user model 需要
-      const signUpData = {...data};
-      const new_uuid = await uuid.v4();
-      signUpData.password = await bcrypt.hash(new_uuid, 12);
-      const newUser = await User.create({
-        ...signUpData
-      });
-      tempData.user = newUser;
-      res.redirect(webSiteCallbackUrl + `?onceToken=${onceTokenHash}`);
-    }
-  },
-  async thirdPartyCallback(req, res, next) {
-    // query.onceToken is Hash
-    const authOnceToken = await bcrypt.compare(tempData.onceToken, req.query.onceToken);
-    if (authOnceToken) generateSendJWT(200, res, tempData.user);
-    else appError(40003, next, '驗證失敗');
-    tempData = {};
+    console.log(data);
+    res.send("已成功授權 Google 登入")
   },
   async check(req, res, next) {
     if (!req.user) return appError(40003, next, '無此帳號，請聯繫管理員');

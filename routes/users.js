@@ -13,10 +13,10 @@ router.get('/check', cors({ exposedHeaders: 'Authorization' }), isAuth, handleEr
 router.post('/signup', handleErrorAsync((req, res, next) => UserControllers.signup(req, res, next)));
 router.post('/signin', cors({ exposedHeaders: 'Authorization' }), handleErrorAsync((req, res, next) => UserControllers.signin(req, res, next)));
 
-// google 登入
-router.get('/google', passport.authenticate('google', {scope: ['email', 'profile']}));
+// google 登入，成功驗證後，會再導回 /google/callback
+router.get('/auth/google', passport.authenticate('google', {scope: ['email', 'profile']}));
 // google callback
-router.get('/google/callback', passport.authenticate('google', {session: false}), handleErrorAsync((req, res, next) => UserControllers.googleSignIn(req, res, next)));
+router.get('/auth/google/callback', passport.authenticate('google', {session: false}), handleErrorAsync((req, res, next) => UserControllers.googleSignIn(req, res, next)));
 // callback
 router.get('/TPcallback', cors({ exposedHeaders: 'Authorization' }), handleErrorAsync((req, res, next) => UserControllers.thirdPartyCallback(req, res, next)));
 

@@ -1,15 +1,26 @@
 const {Schema, model} = require('mongoose');
 const cardSchema = new Schema(
   {
-    headerCover: String,
-    title: String,
-    description: String,
+    headerCover: {
+      type: String
+    },
+    title: {
+      type: String,
+      default: "未命名卡片"
+    },
+    description: {
+      type: String,
+    },
+    isPinned: {
+      type: Boolean,
+      default: false
+    },
     members: [{
       type: Schema.ObjectId,
       ref: "user",
     }],
     comments: [{
-      commentText: String,
+      comment: String,
       commenter: {
         type: Schema.ObjectId,
         ref: "user"
@@ -19,29 +30,38 @@ const cardSchema = new Schema(
         default: Date.now,
       },
     }],
-    labels: [String],
-    isPinned: Boolean,
-    updateNotification: {
-      isTracked: Boolean,
-      isNotifiedForMemberChange: Boolean,
-      isNotifiedForContentChange: Boolean,
-      isNotifiedForTodoListChange: Boolean
+    tags: [String],
+    notification: {
+      type: String,
+      enum: ["到期日前兩天", "成員變更時", "卡片開始前兩天"],
+      default: "到期日前兩天",
     },
-    dueDate: Date,
-    content: String,
-    checkList: [String],
+    dateRange: {
+      type: Array,
+      default: () => [Date.now(), Date.now()]
+    },
+    content: {
+      type: String
+    },
+    toDoList: [{
+      title: String,
+      workingHours: Number,
+      dateRange: [Number, Number],
+      isFinished: Boolean,
+    }],
     list: {
       type: Schema.ObjectId,
       ref: "list",
     },
     createdAt: {
       type: Date,
-      default: Date.now,
+      default: Date.now(),
     },
     updateAt: {
       type: Date,
-      default: Date.now,
+      default: Date.now(),
     },
+    workingHours: Number
   },
   {
     versionKey: false

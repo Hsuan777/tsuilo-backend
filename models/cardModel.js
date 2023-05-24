@@ -10,6 +10,7 @@ const cardSchema = new Schema(
     },
     description: {
       type: String,
+      default: ""
     },
     isPinned: {
       type: Boolean,
@@ -61,7 +62,15 @@ const cardSchema = new Schema(
       type: Date,
       default: Date.now(),
     },
-    workingHours: Number
+    importance: {
+      type: String,
+      enum: ["高", "中", "低"],
+      default: "低",
+    },
+    workingHours: {
+      type: Number,
+      default: 0
+    }
   },
   {
     versionKey: false

@@ -1,6 +1,7 @@
 const Card = require('../models/cardModel.js');
 const card = {
   async getCards(req, res, next) {
+    console.log("getCards");
     const card = await Card.find();
     res.status(200).json({
       status: 'success',
@@ -8,6 +9,7 @@ const card = {
     })
   },
   async getCard(req, res, next) {
+    console.log("getCard");
     const card = await Card.findById(req.params.id);
     res.status(200).json({
       status: 'success',

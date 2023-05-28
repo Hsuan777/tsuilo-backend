@@ -112,12 +112,9 @@ const card = {
   async postCardToDo(req, res, next) {
     const cardData = await Card.findById(req.params.cardId);
     if (cardData) {
-      const { title, workingHours, dateRange, isFinished} = req.body;
+      const { title } = req.body;
       const toDo = {
         title: title,
-        workingHours: workingHours,
-        dateRange: dateRange,
-        isFinished: isFinished
       }
       cardData.toDoList.push(toDo);
       await cardData.save();
@@ -127,12 +124,31 @@ const card = {
       })
     }
   },
+  async patchCardToDo(req, res, next) {
+    const {title, workingHours, dateRange, isFinished} = req.body;
+    const result = await Card.updateOne(
+      { _id: req.params.cardId, "toDoList._id": req.params.toDoId },
+      {
+        $set: {
+          "toDoList.$.title": title,
+          "toDoList.$.workingHours": workingHours,
+          "toDoList.$.dateRange": dateRange,
+          "toDoList.$.isFinished": isFinished
+        }
+      }
+    );
+    if (result.matchedCount > 0) {
+      res.status(200).json({
+        status: "success",
+        data: "修改資料成功"
+      });
+    }
+  },
   async deleteCardToDo(req, res, next) {
     const cardId = req.params.cardId;
     const toDoId = req.params.toDoId;
     const cardData = await Card.findById(cardId);
     const findToDo = cardData.toDoList.filter(toDo => toDo._id == toDoId);
-    console.log(findToDo);
     if (cardData && findToDo.length > 0) {
       // 過濾掉要刪除的 toDo
       cardData.toDoList = cardData.toDoList.filter(toDo => toDo._id != toDoId);

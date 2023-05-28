@@ -45,10 +45,22 @@ const cardSchema = new Schema(
       type: String
     },
     toDoList: [{
-      title: String,
-      workingHours: Number,
-      dateRange: [Number, Number],
-      isFinished: Boolean,
+      title: {
+        type: String,
+        require: true
+      },
+      workingHours: {
+        type: Number,
+        default: 0
+      },
+      dateRange: {
+        type: Array,
+        default: () => [Date.now(), Date.now()]
+      },
+      isFinished: {
+        type: Boolean,
+        default: false
+      },
     }],
     list: {
       type: Schema.ObjectId,

@@ -20,6 +20,7 @@ process.on('uncaughtException', error => {
 
 // 連線 mongodb
 require('./connections');
+require('./websocket');
 
 passport.use(new GoogleStrategy(
   {
@@ -31,24 +32,6 @@ passport.use(new GoogleStrategy(
     return cb(null, profile._json);
   }
 ));
-
-const io = require('socket.io')(3001);
-io.on('connection', (socket) => {
-  console.log('客戶端已連接');
-
-  // 監聽客戶端的消息事件
-  socket.on('message', (data) => {
-    console.log('收到消息：', data);
-
-    // 廣播消息給其他客戶端
-    socket.broadcast.emit('message', data);
-  });
-
-  // 監聽客戶端的斷開連接事件
-  socket.on('disconnect', () => {
-    console.log('客戶端已斷開連接');
-  });
-});
 
 // const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
@@ -95,4 +78,5 @@ process.on('unhandled Rejection', (err, promise) => {
     console.log('未知的 rejection:', promise, '原因:', err);
   }
 })
+
 module.exports = app;

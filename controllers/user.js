@@ -59,7 +59,7 @@ const user = {
   },
   async profile(req, res, next) {
     const user = await User.findById(req.user.id);
-    resSuccess(res, user)
+    resSuccess(res, 200, "susses", user)
   },
   async updateProfile(req, res, next) {
     const data = req.body;

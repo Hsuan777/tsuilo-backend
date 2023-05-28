@@ -2,19 +2,27 @@ const Card = require('../models/cardModel.js');
 const card = {
   async getCards(req, res, next) {
     console.log("getCards");
-    const card = await Card.find();
+    const cards = await Card.find().populate("comments.commenter");
     res.status(200).json({
       status: 'success',
-      data: card
+      data: cards
     })
   },
   async getCard(req, res, next) {
     console.log("getCard");
-    const card = await Card.findById(req.params.id);
-    res.status(200).json({
-      status: 'success',
-      data: card
-    })
+
+    const searchPost = await Card.findById(req.params.id).populate("comments.commenter");
+    if (searchPost) {
+      res.status(200).json({
+        status: 'success',
+        data: searchPost
+      })
+    } else {
+      res.status(200).json({
+        status: 'failed',
+        data: "無資料"
+      })
+    }
   },
   async patchCard(req, res, next) {
     const searchPost = await Card.findById(req.params.id);

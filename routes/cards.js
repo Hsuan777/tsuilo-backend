@@ -10,6 +10,7 @@ router.post('/', isAuth, handleErrorAsync((req, res, next) => CardControllers.po
 router.post('/:cardId/comment', isAuth, handleErrorAsync((req, res, next) => CardControllers.postCardComment(req, res, next)));
 router.post('/:cardId/toDoList', isAuth, handleErrorAsync((req, res, next) => CardControllers.postCardToDo(req, res, next)));
 router.patch('/:id', isAuth, handleErrorAsync((req, res, next) => CardControllers.patchCard(req, res, next)));
+router.patch('/:id/content', isAuth, handleErrorAsync((req, res, next) => CardControllers.patchCardContent(req, res, next)));
 router.delete('/:id', isAuth, handleErrorAsync((req, res, next) => CardControllers.deleteCard(req, res, next)));
 router.delete('/:cardId/comment/:commentId', isAuth, handleErrorAsync((req, res, next) => CardControllers.deleteCardComment(req, res, next)));
 router.patch('/:cardId/toDoList/:toDoId', isAuth, handleErrorAsync((req, res, next) => CardControllers.patchCardToDo(req, res, next)));

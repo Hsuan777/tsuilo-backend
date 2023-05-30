@@ -27,7 +27,7 @@ const card = {
   async patchCard(req, res, next) {
     const searchPost = await Card.findById(req.params.id);
     if (searchPost) {
-      const {title, description, isPinned, tags, notification, dateRange, workingHours, importance, comments, toDoList} = req.body;
+      const {title, description, isPinned, tags, notification, dateRange, workingHours, importance, content} = req.body;
       const patchData = {
         title: title,
         description: description,
@@ -37,14 +37,26 @@ const card = {
         dateRange: dateRange,
         workingHours: workingHours,
         importance: importance,
-        comments: comments,
-        toDoList: toDoList
+        content: content
       }
       await Card.findByIdAndUpdate(req.params.id, {...patchData});
       res.status(200).json({
         status: 'success',
         data: "修改資料成功"
       })
+    }
+  },
+  async patchCardContent(req, res, next) {
+    const searchPost = await Card.findById(req.params.id);
+    if (searchPost) {
+      const { content } = req.body;
+      if (typeof content === "string") {
+        await Card.findByIdAndUpdate(req.params.id, { content: content });
+        res.status(200).json({
+          status: 'success',
+          data: "修改資料成功"
+        });
+      }
     }
   },
   async postCard(req, res, next) {

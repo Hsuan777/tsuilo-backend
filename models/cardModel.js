@@ -42,7 +42,8 @@ const cardSchema = new Schema(
       default: () => [Date.now(), Date.now()]
     },
     content: {
-      type: String
+      type: String,
+      default: ""
     },
     toDoList: [{
       title: {

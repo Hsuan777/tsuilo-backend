@@ -27,8 +27,9 @@ const card = {
   async patchCard(req, res, next) {
     const searchPost = await Card.findById(req.params.id);
     if (searchPost) {
-      const {title, description, isPinned, tags, notification, dateRange, workingHours, importance, content} = req.body;
+      const {headerCover, title, description, isPinned, tags, notification, dateRange, workingHours, importance, content} = req.body;
       const patchData = {
+        headerCover: headerCover,
         title: title,
         description: description,
         isPinned: isPinned,
@@ -60,15 +61,27 @@ const card = {
     }
   },
   async postCard(req, res, next) {
-    const { title } = req.body;
-    if (title === undefined) return
-    const newPost = await Card.create({
-      title
-    });
-    res.status(200).json({
-      status: 'success',
-      data: newPost
-    })
+    const {title, dateRange, workingHours} = req.body;
+    if (title === undefined || "") return;
+    if (workingHours >= 0) {
+      const newPost = await Card.create({
+        title,
+        dateRange,
+        workingHours
+      });
+      res.status(200).json({
+        status: 'success',
+        data: newPost
+      })
+    } else {
+      const newPost = await Card.create({
+        title
+      });
+      res.status(200).json({
+        status: 'success',
+        data: newPost
+      })
+    }
   },
   async deleteCard(req, res, next) {
     const searchCard = await Card.findById(req.params.id);

@@ -2,7 +2,8 @@ const {Schema, model} = require('mongoose');
 const cardSchema = new Schema(
   {
     headerCover: {
-      type: String
+      type: String,
+      default: ""
     },
     title: {
       type: String,
